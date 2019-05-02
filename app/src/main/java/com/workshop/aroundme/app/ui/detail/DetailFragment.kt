@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.workshop.aroundme.R
 import com.workshop.aroundme.app.Injector
 import com.workshop.aroundme.data.model.PlaceDetailEntity
+import java.lang.ref.WeakReference
 
 class DetailFragment : Fragment(), DetailContract.View {
 
@@ -23,7 +24,7 @@ class DetailFragment : Fragment(), DetailContract.View {
         DetailPresenter(
             Injector.providePlaceRepository(requireContext())
         ).apply {
-            view = (this@DetailFragment)
+            view = WeakReference(this@DetailFragment as DetailContract.View)
         }
     }
 
