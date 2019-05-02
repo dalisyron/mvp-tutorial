@@ -15,6 +15,9 @@ import com.workshop.aroundme.data.model.ParentCategoryEntity
 import com.workshop.aroundme.data.model.PlaceEntity
 import java.lang.ref.WeakReference
 
+
+// Q : Why don't we pass the view as a constructor parameter just like the other stuff?
+
 class HomeFragment : Fragment(), OnHomePlaceItemClickListener, HomeContract.View {
 
     private var adapter: ModernHomeAdapter? = null

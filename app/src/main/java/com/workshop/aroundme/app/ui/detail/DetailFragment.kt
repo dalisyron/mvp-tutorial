@@ -13,11 +13,18 @@ import com.workshop.aroundme.R
 import com.workshop.aroundme.app.Injector
 import com.workshop.aroundme.data.model.PlaceDetailEntity
 
-class DetailFragment : Fragment() {
+class DetailFragment : Fragment(), DetailContract.View {
 
     private var slug: String? = null
     private var recyclerView: RecyclerView? = null
     private var loading: View? = null
+
+    private val presenter: DetailContract.Presenter by lazy {
+        DetailPresenter(
+            this,
+            Injector.providePlaceRepository(requireContext())
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,16 +51,34 @@ class DetailFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
+        presenter.onActivityCreated(slug)
+        /*
         slug?.let { mySlug ->
             val repository = Injector.providePlaceRepository(requireContext())
             repository.getPlaceDetail(mySlug, ::onDetailReady)
         } ?: run {
             Toast.makeText(requireContext(), "Slug must not be null", Toast.LENGTH_LONG).show()
         }
+        */
     }
 
     private fun onDetailReady(placeDetailEntity: PlaceDetailEntity?) {
+        presenter.onDetailReady(placeDetailEntity)
+        /*
+        activity?.runOnUiThread {
+            placeDetailEntity?.let {
+                recyclerView?.adapter = DetailsAdapter(placeDetailEntity)
+                loading?.visibility = View.GONE
+            }
+        }
+        */
+    }
+
+    override fun invalidSlugToast() {
+        Toast.makeText(requireContext(), "Slug must not be null", Toast.LENGTH_LONG).show()
+    }
+
+    override fun showItemDetails(placeDetailEntity: PlaceDetailEntity?) {
         activity?.runOnUiThread {
             placeDetailEntity?.let {
                 recyclerView?.adapter = DetailsAdapter(placeDetailEntity)
