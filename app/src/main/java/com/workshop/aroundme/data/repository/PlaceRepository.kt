@@ -25,10 +25,9 @@ class PlaceRepository(
         }
     }
 
-    fun getPlaceDetail(slug: String, success: (PlaceDetailEntity?) -> Unit) {
-        thread {
-            val entity = placeRemoteDataSource.getPlaceDetail(slug)?.toPlaceDetailEntity()
-            success(entity)
+    fun getPlaceDetail(slug: String) : Single<PlaceDetailEntity> {
+        return Single.fromCallable {
+            placeRemoteDataSource.getPlaceDetail(slug)?.toPlaceDetailEntity()
         }
     }
 

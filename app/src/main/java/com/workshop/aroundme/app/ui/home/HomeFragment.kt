@@ -16,7 +16,8 @@ import com.workshop.aroundme.data.model.PlaceEntity
 import java.lang.ref.WeakReference
 
 
-// Q : Why don't we pass the view as a constructor parameter just like the other stuff?
+/* Q : Why store the view as a field,
+when we can just pass the view as a constructor parameter just like the other stuff?*/
 
 class HomeFragment : Fragment(), OnHomePlaceItemClickListener, HomeContract.View {
 
