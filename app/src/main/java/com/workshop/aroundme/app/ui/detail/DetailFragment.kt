@@ -21,9 +21,10 @@ class DetailFragment : Fragment(), DetailContract.View {
 
     private val presenter: DetailContract.Presenter by lazy {
         DetailPresenter(
-            this,
             Injector.providePlaceRepository(requireContext())
-        )
+        ).apply {
+            view = (this@DetailFragment)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
