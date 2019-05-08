@@ -17,7 +17,7 @@ import com.workshop.aroundme.app.ui.detail.DetailFragment
 import com.workshop.aroundme.data.model.ParentCategoryEntity
 import com.workshop.aroundme.data.model.PlaceEntity
 
-class HomeFragment : Fragment(), OnHomePlaceItemClickListener, HomeContract.View {
+class HomeFragment : Fragment(), OnHomePlaceItemClickListener {
 
     private val viewModelFactory by lazy {
         HomeViewModelFactory(Injector.providePlaceRepository(requireContext()),
@@ -29,15 +29,6 @@ class HomeFragment : Fragment(), OnHomePlaceItemClickListener, HomeContract.View
     }
 
     private var adapter: ModernHomeAdapter? = null
-
-    private val presenter: HomeContract.Presenter by lazy {
-        HomePresenter(
-            Injector.providePlaceRepository(requireContext()),
-            Injector.provideCategoryRepository()
-        ).apply {
-            view = this@HomeFragment
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,22 +62,6 @@ class HomeFragment : Fragment(), OnHomePlaceItemClickListener, HomeContract.View
         viewModel.onActivityCreated()
     }
 
-    override fun showPlaces(places: List<PlaceEntity>) {
-        activity?.runOnUiThread {
-            val recyclerView = view?.findViewById<RecyclerView>(R.id.recyclerView)
-            val progressBar = view?.findViewById<ProgressBar>(R.id.loadingBar)
-            progressBar?.visibility = View.GONE
-            adapter = ModernHomeAdapter(places, this)
-            recyclerView?.adapter = adapter
-        }
-    }
-
-    override fun showCategories(categories: List<ParentCategoryEntity>) {
-        activity?.runOnUiThread {
-            adapter?.parentCategories = categories
-        }
-    }
-
     override fun onPlaceItemCliced(placeEntity: PlaceEntity) {
         fragmentManager?.beginTransaction()
             ?.replace(R.id.content_frame, DetailFragment.newInstance(placeEntity.slug))
@@ -95,6 +70,6 @@ class HomeFragment : Fragment(), OnHomePlaceItemClickListener, HomeContract.View
     }
 
     override fun onItemStarred(placeEntity: PlaceEntity) {
-        presenter.onItemStarred(placeEntity)
+        viewModel.onItemStarred(placeEntity)
     }
 }
