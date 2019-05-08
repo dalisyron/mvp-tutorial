@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.workshop.aroundme.R
@@ -20,6 +22,14 @@ class DetailFragment : Fragment() {
     private var slug: String? = null
     private var recyclerView: RecyclerView? = null
     private var loading: View? = null
+
+    private val viewModelFactory by lazy {
+        DetailViewModelFactory(Injector.providePlaceRepository(requireContext()))
+    }
+
+    private val viewModel by lazy {
+        ViewModelProviders.of(this, viewModelFactory).get(DetailViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,20 +57,16 @@ class DetailFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        slug?.let { mySlug ->
-            val repository = Injector.providePlaceRepository(requireContext())
-            repository.getPlaceDetail(mySlug)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { placeDetail : PlaceDetailEntity ->
-                    placeDetail?.let {
-                        recyclerView?.adapter = DetailsAdapter(placeDetail)
-                        loading?.visibility = View.GONE
-                    }
-                }
-        } ?: run {
-            Toast.makeText(requireContext(), "Slug must not be null", Toast.LENGTH_LONG).show()
+        viewModel.apply {
+            showPlaceDetails.observe(this@DetailFragment, Observer {
+                recyclerView?.adapter = DetailsAdapter(it)
+                loading?.visibility = View.GONE
+            })
+            showInvalidSlugMessage.observe(this@DetailFragment, Observer {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+            })
         }
+        viewModel.onActivityCreated(slug)
     }
 
     companion object {
