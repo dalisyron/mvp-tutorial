@@ -53,19 +53,13 @@ class DetailFragment : Fragment() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { placeDetail : PlaceDetailEntity ->
-                    onDetailReady(placeDetail)
+                    placeDetail?.let {
+                        recyclerView?.adapter = DetailsAdapter(placeDetail)
+                        loading?.visibility = View.GONE
+                    }
                 }
         } ?: run {
             Toast.makeText(requireContext(), "Slug must not be null", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    private fun onDetailReady(placeDetailEntity: PlaceDetailEntity?) {
-        activity?.runOnUiThread {
-            placeDetailEntity?.let {
-                recyclerView?.adapter = DetailsAdapter(placeDetailEntity)
-                loading?.visibility = View.GONE
-            }
         }
     }
 
