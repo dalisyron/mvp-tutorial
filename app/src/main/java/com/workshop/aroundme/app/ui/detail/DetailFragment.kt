@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.workshop.aroundme.R
 import com.workshop.aroundme.app.Injector
 import com.workshop.aroundme.data.model.PlaceDetailEntity
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 class DetailFragment : Fragment() {
 
@@ -47,7 +49,12 @@ class DetailFragment : Fragment() {
 
         slug?.let { mySlug ->
             val repository = Injector.providePlaceRepository(requireContext())
-            repository.getPlaceDetail(mySlug, ::onDetailReady)
+            repository.getPlaceDetail(mySlug)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { placeDetail : PlaceDetailEntity ->
+                    onDetailReady(placeDetail)
+                }
         } ?: run {
             Toast.makeText(requireContext(), "Slug must not be null", Toast.LENGTH_LONG).show()
         }
