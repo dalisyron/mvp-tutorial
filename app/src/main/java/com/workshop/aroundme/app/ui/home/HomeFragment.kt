@@ -1,11 +1,14 @@
 package com.workshop.aroundme.app.ui.home
 
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.workshop.aroundme.R
@@ -15,6 +18,15 @@ import com.workshop.aroundme.data.model.ParentCategoryEntity
 import com.workshop.aroundme.data.model.PlaceEntity
 
 class HomeFragment : Fragment(), OnHomePlaceItemClickListener, HomeContract.View {
+
+    private val viewModelFactory by lazy {
+        HomeViewModelFactory(Injector.providePlaceRepository(requireContext()),
+            Injector.provideCategoryRepository())
+    }
+
+    private val viewModel by lazy {
+        ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
+    }
 
     private var adapter: ModernHomeAdapter? = null
 
@@ -40,11 +52,23 @@ class HomeFragment : Fragment(), OnHomePlaceItemClickListener, HomeContract.View
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
+
+        viewModel.apply {
+            showPlaces.observe(this@HomeFragment, Observer {
+                val progressBar = view?.findViewById<ProgressBar>(R.id.loadingBar)
+                progressBar.visibility = View.GONE
+                adapter = ModernHomeAdapter(it, this@HomeFragment)
+                recyclerView.adapter = adapter
+            })
+            showCategories.observe(this@HomeFragment, Observer {
+                adapter?.parentCategories = it
+            })
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        presenter.onActivityCreated()
+        viewModel.onActivityCreated()
     }
 
     override fun showPlaces(places: List<PlaceEntity>) {
