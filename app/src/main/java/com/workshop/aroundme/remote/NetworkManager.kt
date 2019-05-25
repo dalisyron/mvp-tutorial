@@ -5,8 +5,9 @@ import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
+import javax.inject.Inject
 
-class NetworkManager {
+class NetworkManager @Inject constructor() {
 
     fun get(url: String): String {
         return URL(url)

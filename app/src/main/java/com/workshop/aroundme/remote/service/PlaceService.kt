@@ -4,8 +4,9 @@ import com.google.gson.Gson
 import com.workshop.aroundme.remote.NetworkManager
 import com.workshop.aroundme.remote.model.response.FeaturedPlacesResponseDto
 import com.workshop.aroundme.remote.model.response.PlaceDetailResponseDto
+import javax.inject.Inject
 
-class PlaceService(private val networkManager: NetworkManager) {
+class PlaceService @Inject constructor(private val networkManager: NetworkManager) {
 
     fun getFeaturedPlacesResponse(): FeaturedPlacesResponseDto {
         val rawData = networkManager.get(URL_FEATURED)

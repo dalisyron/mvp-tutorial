@@ -13,23 +13,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.workshop.aroundme.R
 import com.workshop.aroundme.app.Injector
+import com.workshop.aroundme.app.MyApplication
 import com.workshop.aroundme.app.ui.detail.DetailFragment
 import com.workshop.aroundme.data.model.ParentCategoryEntity
 import com.workshop.aroundme.data.model.PlaceEntity
+import javax.inject.Inject
 
 class HomeFragment : Fragment(), OnHomePlaceItemClickListener {
 
-    private val viewModelFactory by lazy {
-        HomeViewModelFactory(Injector.providePlaceRepository(requireContext()),
-            Injector.provideCategoryRepository())
-    }
-
-    private val viewModel by lazy {
-        ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
-    }
+    @Inject lateinit var viewModel : HomeViewModel
 
     private var adapter: ModernHomeAdapter? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        MyApplication.component.inject(this)
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

@@ -3,8 +3,9 @@ package com.workshop.aroundme.remote.service
 import com.google.gson.Gson
 import com.workshop.aroundme.remote.NetworkManager
 import com.workshop.aroundme.remote.model.response.CategoryResponseDto
+import javax.inject.Inject
 
-class CategoryService(private val networkManager: NetworkManager) {
+class CategoryService @Inject constructor(private val networkManager: NetworkManager) {
 
     fun getCategoriesResponse(): CategoryResponseDto {
         val rawData = networkManager.get(URL_CATEGORIES)

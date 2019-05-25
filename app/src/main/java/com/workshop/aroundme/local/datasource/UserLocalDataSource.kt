@@ -3,8 +3,9 @@ package com.workshop.aroundme.local.datasource
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.workshop.aroundme.data.model.UserEntity
+import javax.inject.Inject
 
-class UserLocalDataSource(private val sharedPreferences: SharedPreferences) {
+class UserLocalDataSource @Inject constructor(private val sharedPreferences: SharedPreferences) {
 
     fun login(user: UserEntity) {
         val userData = Gson().toJson(user, UserEntity::class.java)

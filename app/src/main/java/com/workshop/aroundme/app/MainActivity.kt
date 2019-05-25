@@ -13,8 +13,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MyApplication.component.inject(this)
         setContentView(R.layout.activity_main)
-
         val userRepository = Injector.provideUserRepository(this)
         if (userRepository.isLoggedIn()) {
             supportFragmentManager.beginTransaction()

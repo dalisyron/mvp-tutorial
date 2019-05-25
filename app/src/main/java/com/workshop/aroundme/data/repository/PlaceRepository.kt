@@ -10,9 +10,10 @@ import com.workshop.aroundme.local.datasource.PlaceLocalDataSource
 import com.workshop.aroundme.remote.datasource.PlaceRemoteDataSource
 import io.reactivex.Completable
 import io.reactivex.Single
+import javax.inject.Inject
 import kotlin.concurrent.thread
 
-class PlaceRepository(
+class PlaceRepository @Inject constructor(
     private val placeLocalDataSource: PlaceLocalDataSource,
     private val placeRemoteDataSource: PlaceRemoteDataSource
 ) {
