@@ -13,9 +13,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.workshop.aroundme.R
 import com.workshop.aroundme.app.Injector
+import com.workshop.aroundme.app.MyApplication
+import com.workshop.aroundme.app.ui.login.LoginViewModel
 import com.workshop.aroundme.data.model.PlaceDetailEntity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 class DetailFragment : Fragment() {
 
@@ -23,17 +26,13 @@ class DetailFragment : Fragment() {
     private var recyclerView: RecyclerView? = null
     private var loading: View? = null
 
-    private val viewModelFactory by lazy {
-        DetailViewModelFactory(Injector.providePlaceRepository(requireContext()))
-    }
 
-    private val viewModel by lazy {
-        ViewModelProviders.of(this, viewModelFactory).get(DetailViewModel::class.java)
-    }
+    @Inject
+    lateinit var viewModel : DetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        MyApplication.component.inject(this)
         slug = arguments?.getString(KEY_SLUG)
     }
 

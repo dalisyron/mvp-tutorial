@@ -11,16 +11,18 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.workshop.aroundme.R
 import com.workshop.aroundme.app.Injector
+import com.workshop.aroundme.app.MyApplication
 import com.workshop.aroundme.app.ui.home.HomeFragment
+import javax.inject.Inject
 
 class LoginFragment : Fragment() {
 
-    private val viewModelFactory by lazy(LazyThreadSafetyMode.NONE) {
-        LoginViewModelFactory(Injector.provideUserRepository(requireContext()))
-    }
+    @Inject
+    lateinit var viewModel : LoginViewModel
 
-    private val viewModel by lazy(LazyThreadSafetyMode.NONE) {
-        ViewModelProviders.of(this, viewModelFactory)[LoginViewModel::class.java]
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        MyApplication.component.inject(this)
     }
 
     override fun onCreateView(

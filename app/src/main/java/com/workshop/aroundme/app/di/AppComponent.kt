@@ -7,7 +7,7 @@ import com.workshop.aroundme.app.ui.login.LoginFragment
 import com.workshop.aroundme.app.ui.starred.StarredFragment
 import dagger.Component
 
-@Component(modules = [AppModule::class, HomeModule::class, DatabaseModule::class])
+@Component(modules = [AppModule::class, HomeModule::class, DatabaseModule::class, DetailModule::class, LoginModule::class])
 interface AppComponent {
     fun inject(mainActivity: MainActivity)
     fun inject(homeFragment: HomeFragment)
